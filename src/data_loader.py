@@ -1,6 +1,7 @@
 import xarray as xr
 import numpy as np
 import os
+import matplotlib.pyplot as plt
 
 # Define the 4 fixed ERA5 grid points
 LOCATIONS = [
@@ -48,3 +49,48 @@ def compute_wind_speed_at_locations(ds, height='10'):
         wind_speeds[(lat, lon)] = speed
 
     return wind_speeds
+
+
+def plot_wind_speed(ds,height='10'):
+    wind_speeds = compute_wind_speed_at_locations(ds, height)
+
+
+    for (lat, lon), speed in wind_speeds.items():
+        plt.figure(figsize=(15, 4))
+        speed.plot()
+        plt.title(f"Wind Speed at {height} m ({lat}°N, {lon}°E)")
+        plt.ylabel("Wind Speed [m/s]")
+        plt.xlabel("Time")
+        plt.grid(True)
+        plt.tight_layout()
+        plt.show()
+
+
+
+# Not done
+def plot_wind_speed_at_different_heights(ds,heights=['10', '100']): 
+    
+    wind_speeds = {}
+
+    for i in range(len(heights)):
+        wind_speeds[i] = compute_wind_speed_at_locations(ds, heights[i])
+
+
+    for (lat, lon), speed in wind_speeds[i].items():
+        for i in range(len(heights)):    
+            plt.figure(figsize=(15, 4))
+            if i == 0:
+                speed.plot(color='blue')
+            else:
+                speed.plot(color='green')
+            
+        plt.title(f"Wind Speed at {heights[i]} m ({lat}°N, {lon}°E)")
+        plt.ylabel("Wind Speed [m/s]")
+        plt.xlabel("Time")
+        plt.grid(True)
+        plt.tight_layout()
+        plt.show()
+
+
+    
+
