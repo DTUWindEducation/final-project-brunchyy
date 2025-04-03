@@ -1,8 +1,16 @@
 import xarray as xr
 import numpy as np
-import matplotlib.pyplot as plt
+import os
 
-# Step 1: Load the dataset
+# Define the 4 fixed ERA5 grid points
+LOCATIONS = [
+    (55.5, 7.75),
+    (55.5, 8.0),
+    (55.75, 7.75),
+    (55.75, 8.0)
+]
+
+# Load the dataset
 def load_dataset(filepaths):
     """
     Load and concatenate multiple ERA5 NetCDF files into a single xarray Dataset.
@@ -14,58 +22,29 @@ def load_dataset(filepaths):
     - xarray.Dataset: combined dataset
     """
     datasets = [xr.open_dataset(fp) for fp in filepaths]
-    combined = xr.concat(datasets, dim='time')
+    combined = xr.concat(datasets, dim='valid_time')  # adjust dim to match your file
     return combined
 
-# Step 2: Compute wind speed & direction and plot it
-def plot_wind_timeseries(dataset, plot_speed=True, plot_direction=False):
+# Compute wind speed at each location
+def compute_wind_speed_at_locations(ds, height='10'):
     """
-    Extract and plot wind speed and/or direction at 10m and 100m for 4 locations.
+    Compute wind speed time series for fixed locations at given height.
 
     Parameters:
-    - dataset (xarray.Dataset): loaded dataset
-    - plot_speed (bool): whether to plot wind speed
-    - plot_direction (bool): whether to plot wind direction
+    - ds (xarray.Dataset): ERA5 dataset
+    - height (str): height in meters as string, e.g., '10' or '100'
+
+    Returns:
+    - dict: {(lat, lon): wind_speed_time_series}
     """
-    # Locations of interest
-    locations = [
-        (55.5, 7.75),
-        (55.5, 8.0),
-        (55.75, 7.75),
-        (55.75, 8.0)
-    ]
+    wind_speeds = {}
+    for lat, lon in LOCATIONS:
+        point_data = ds.sel(latitude=lat, longitude=lon, method='nearest')
 
-    for height in [10, 100]:
-        u = dataset[f"u{height}"]
-        v = dataset[f"v{height}"]
+        u = point_data[f'u{height}']
+        v = point_data[f'v{height}']
+        speed = np.sqrt(u**2 + v**2)
 
-        if plot_speed:
-            plt.figure(figsize=(12, 5))
-            for lat, lon in locations:
-                u_point = u.sel(latitude=lat, longitude=lon, method="nearest")
-                v_point = v.sel(latitude=lat, longitude=lon, method="nearest")
-                speed = np.sqrt(u_point**2 + v_point**2)
-                plt.plot(speed["time"], speed, label=f"{lat}°N, {lon}°E")
-            plt.title(f"Wind Speed Time Series at {height}m")
-            plt.xlabel("Time")
-            plt.ylabel("Wind Speed (m/s)")
-            plt.legend()
-            plt.grid(True)
-            plt.tight_layout()
-            plt.show()
+        wind_speeds[(lat, lon)] = speed
 
-        if plot_direction:
-            plt.figure(figsize=(12, 5))
-            for lat, lon in locations:
-                u_point = u.sel(latitude=lat, longitude=lon, method="nearest")
-                v_point = v.sel(latitude=lat, longitude=lon, method="nearest")
-                direction_rad = np.arctan2(u_point, v_point)
-                direction_deg = (np.degrees(direction_rad) + 360) % 360
-                plt.plot(direction_deg["time"], direction_deg, label=f"{lat}°N, {lon}°E")
-            plt.title(f"Wind Direction Time Series at {height}m")
-            plt.xlabel("Time")
-            plt.ylabel("Direction (° from North)")
-            plt.legend()
-            plt.grid(True)
-            plt.tight_layout()
-            plt.show()
+    return wind_speeds
