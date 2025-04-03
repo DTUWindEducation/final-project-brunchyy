@@ -12,13 +12,14 @@ nc_files = [os.path.join(input_folder, f) for f in os.listdir(input_folder) if f
 ds = load_dataset(nc_files)
 
 
-plot_wind_speed(ds, '10')
 
-plot_wind_speed(ds, '100')
+#plot_wind_speed(ds, '10')
+
+#plot_wind_speed(ds, '100')
 
 
-#Not done yet
-#plot_wind_speed_at_different_heights(ds, heights=['10', '100'])
+
+plot_wind_speed_at_different_heights(ds, heights=['10', '100'])
 
 
 
