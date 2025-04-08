@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import os
-from src.data_loader import load_dataset, compute_wind_speed_at_locations
+from src.data_loader import load_dataset, compute_wind_speed_at_locations, plot_wind_speed, plot_wind_speed_at_different_heights
+import numpy as np
+
 
 # Collect all .nc file paths from the inputs folder
 input_folder = "inputs"
@@ -9,16 +11,15 @@ nc_files = [os.path.join(input_folder, f) for f in os.listdir(input_folder) if f
 # Load and combine all NetCDF files
 ds = load_dataset(nc_files)
 
-# Compute wind speed at 10 m height
-wind_speeds = compute_wind_speed_at_locations(ds, '100')
 
-# Plot wind speed time series for each location
-for (lat, lon), speed in wind_speeds.items():
-    plt.figure(figsize=(15, 4))
-    speed.plot()
-    plt.title(f"Wind Speed at 100 m ({lat}°N, {lon}°E)")
-    plt.ylabel("Wind Speed [m/s]")
-    plt.xlabel("Time")
-    plt.grid(True)
-    plt.tight_layout()
-    plt.show()
+
+#plot_wind_speed(ds, '10')
+
+#plot_wind_speed(ds, '100')
+
+
+
+plot_wind_speed_at_different_heights(ds, heights=['10', '100'])
+
+
+
