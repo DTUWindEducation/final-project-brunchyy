@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 # Defining data file paths
 # this makes path in [0] the MW5 and [1] the MW8
 MW5 = "inputs/NREL_Reference_5MW_126.csv"
-MW8 = "inputs/NREL_Reference_8MW_164.csv"
-filePath = np.array([MW5, MW8])
+MW15 = "inputs/NREL_Reference_15MW_240.csv"
+filePath = np.array([MW5, MW15])
 
 # Parameters are taken from:
 # https://nrel.github.io/turbine-models/LEANWIND_8MW_164_RWT.html
