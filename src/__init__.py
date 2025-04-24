@@ -3,7 +3,6 @@ import pandas as pd
 import xarray as xr
 import matplotlib.pyplot as plt
 
-
 def nc_reader(file_paths):
     """
     Læser én eller flere NetCDF-filer og returnerer en samlet pandas DataFrame.
