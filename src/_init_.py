@@ -24,9 +24,9 @@ def wind_speed(df2):
 
     df2["wind_speed_100m [m/s]"] = np.sqrt(df2["u100"]**2 + df2["v100"]**2)
 
-    df2["wind_direction_10m [degrees]"] = np.arctan2(df2["u10"], df2["v10"]) * 180 / np.pi
+    df2["wind_direction_10m [degrees]"] = np.arctan2(df2["u10"], df2["v10"]) * 180 / np.pi + 180
 
-    df2["wind_direction_100m [degrees]"] = np.arctan2(df2["u100"], df2["v100"]) * 180 / np.pi
+    df2["wind_direction_100m [degrees]"] = np.arctan2(df2["u100"], df2["v100"]) * 180 / np.pi + 180
 
     df = df2[["valid_time", "latitude", "longitude", "wind_speed_10m [m/s]", "wind_speed_100m [m/s]","wind_direction_10m [degrees]", "wind_direction_100m [degrees]"]]
 
