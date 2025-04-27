@@ -4,13 +4,13 @@ import matplotlib.pyplot as plt
 
 def fit_weibull(speed_data):
     """
-    Fit a 2‑parameter Weibull to the input wind-speed array.
+    Fit a 2-parameter Weibull to the input wind-speed array.
     Returns: k (shape), A (scale).
     """
     k, loc, A = weibull_min.fit(speed_data, floc=0)
     return k, A
 
-def plot_weibull(speed_data, k, A, bins=30):
+def plot_weibull(speed_data, k, A, height, bins=30):
     """
     Plot the observed wind-speed histogram (density) and overlay the
     fitted Weibull PDF with parameters k, A.
@@ -26,6 +26,7 @@ def plot_weibull(speed_data, k, A, bins=30):
             label='Observed')
     plt.plot(centers, pdf, lw=2,
              label=f'Weibull k={k:.2f}, A={A:.2f}')
+    plt.title(f"Weibull Distribution Fit at {height} m")
     plt.xlabel('Wind Speed [m/s]')
     plt.ylabel('Probability Density')
     plt.legend()
