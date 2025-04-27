@@ -85,7 +85,7 @@
                 <mxCell id="35" value="" style="edgeStyle=none;html=1;" edge="1" parent="1" source="36" target="34">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="36" value="rotor_diameter, hub_height, rated_power, v_in, v_rated, v_out,&amp;nbsp; &quot;LEANWIND_5MW_126_Detailed&quot;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                <mxCell id="36" value="rotor_diameter, hub_height, rated_power, v_in, v_rated, v_out,&amp;nbsp; &quot;LEANWIND_15MW_240_Detailed&quot;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
                     <mxGeometry x="-170" y="550" width="360" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="42" value="" style="edgeStyle=none;html=1;" edge="1" parent="1" source="37" target="41">
