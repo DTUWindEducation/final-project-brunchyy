@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import xarray as xr
 import matplotlib.pyplot as plt
+from stats import fit_weibull, plot_weibull #to import q5 and q6 solved in stats.py
 
 def nc_reader(file_paths):
     """
@@ -137,3 +138,20 @@ lat_8_lon_55_5, lat_8_lon_55_75, lat_7_75_lon_55_5, lat_7_75_lon_55_75 = nc_sort
 
 interpolatedTable = interpolation(7.93, 55.65, lat_8_lon_55_5, lat_8_lon_55_75, lat_7_75_lon_55_5, lat_7_75_lon_55_75)
 print(interpolatedTable)
+
+#######snippet code to make stats work
+
+# Choose which height to analyze: 10 or 100?
+height = 100  
+col_name = f"wind_speed_{height}m [m/s]"
+
+# 1) extract a clean 1-D numpy array
+speed_array = interpolatedTable[col_name].to_numpy()
+speed_array = speed_array[~np.isnan(speed_array)]
+
+# 2) fit the Weibull distribution
+k, A = fit_weibull(speed_array)
+print(f"Fitted Weibull at {height} m: k = {k:.2f}, A = {A:.2f}")
+
+# 3) plot the histogram vs. the fitted PDF
+plot_weibull(speed_array, k, A, bins=40)
