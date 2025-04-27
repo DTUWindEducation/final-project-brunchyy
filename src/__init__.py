@@ -2,7 +2,8 @@ import numpy as np
 import pandas as pd
 import xarray as xr
 import matplotlib.pyplot as plt
-from stats import fit_weibull, plot_weibull #to import q5 and q6 solved in stats.py
+from scipy.stats import weibull_min
+
 
 def nc_reader(file_paths):
     """
@@ -15,7 +16,6 @@ def nc_reader(file_paths):
     combined = xr.concat(datasets, dim="valid_time")
     df2 = combined.to_dataframe().reset_index()
     return df2
-
 
 
 
@@ -105,7 +105,8 @@ def interpolation(lat, lon, lat_8_lon_55_5, lat_8_lon_55_75, lat_7_75_lon_55_5, 
 
     return interpolatedTable
     
-###### power law profile #####
+
+
 def compute_power_law(interpolatedTable, height, z1=10, z2=100):
     """
     Compute wind speed at a given height using the power law.
@@ -134,63 +135,114 @@ def compute_power_law(interpolatedTable, height, z1=10, z2=100):
 
     return interpolatedTable_height
 
-###### ######### #####
+def fit_weibull(speed_data):
+    """
+    Fit a 2-parameter Weibull to the input wind-speed array.
+    Returns: k (shape), A (scale).
+    """
+    k, loc, A = weibull_min.fit(speed_data, floc=0)
+    return k, A
 
-file_path = ["inputs/1997-1999.nc", "inputs/2000-2002.nc", "inputs/2003-2005.nc", "inputs/2006-2008.nc", "inputs/2009-2011.nc", "inputs/2012-2014.nc", "inputs/2015-2017.nc", "inputs/2018-2020.nc"]
+def plot_weibull(speed_data, k, A, height, bins=30):
+    """
+    Plot the observed wind-speed histogram (density) and overlay the
+    fitted Weibull PDF with parameters k, A.
+    """
+    counts, edges = np.histogram(speed_data, bins=bins, density=True)
+    centers = 0.5*(edges[:-1] + edges[1:])
+    pdf = weibull_min.pdf(centers, k, loc=0, scale=A)
 
-df2 = nc_reader(file_path)
+    plt.figure()
+    plt.bar(centers, counts,
+            width=(edges[1]-edges[0]),
+            alpha=0.6,
+            label='Observed')
+    plt.plot(centers, pdf, lw=2,
+             label=f'Weibull k={k:.2f}, A={A:.2f}')
+    plt.title(f"Weibull Distribution Fit at {height} m")
+    plt.xlabel('Wind Speed [m/s]')
+    plt.ylabel('Probability Density')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
 
-df = wind_speed(df2)
 
-#print(df)
 
-lat_8_lon_55_5, lat_8_lon_55_75, lat_7_75_lon_55_5, lat_7_75_lon_55_75 = nc_sorter(df)
+class GeneralWindTurbine:
+    """
+    Represents a general wind turbine using analytical equations.
+    """
+    def __init__(self, rotor_diameter, hub_height, rated_power, v_in, v_rated, v_out, name=None):
+        self.rotor_diameter = rotor_diameter
+        self.hub_height = hub_height
+        self.rated_power = rated_power
+        self.v_in = v_in
+        self.v_rated = v_rated
+        self.v_out = v_out
+        self.name = name
 
-#print(lat_8_lon_55_5)
-#print(lat_8_lon_55_75)
-#print(lat_7_75_lon_55_5)
-#print(lat_7_75_lon_55_75)
+    def get_power(self, v):
+        if v < self.v_in or v > self.v_out:
+            P = 0
+        elif self.v_in <= v < self.v_rated:
+            P =self.rated_power * (v/self.v_rated) ** 3
+        elif self.v_rated <= v < self.v_out:
+            P = self.rated_power
+        return P
 
-#plot = lat_8_lon_55_5.plot(x="valid_time", y="wind_direction_10m [degrees]", title="Wind Speed at 10m Height (Latitude: 8.0, Longitude: 55.5)", figsize=(12, 6))
-#plt.xlabel("Valid Time")   
-#plt.ylabel("wind_direction_10m [degrees]")
-#plt.grid(True)
-#plt.show()
 
-#a = {}
+class WindTurbine(GeneralWindTurbine):
+    """
+    Wind turbine with actual power curve data for interpolation.
+    """
+    def __init__(self, rotor_diameter, hub_height, rated_power, v_in, v_rated, v_out, power_curve_data, name=None):
+        # Using the parent class __init__ to get the self values 
+        super().__init__(rotor_diameter, hub_height, rated_power, v_in, v_rated, v_out, name)
+        
+        self.power_curve_data = np.array(power_curve_data)
 
-#a["Test"] = df["wind_speed_10m [m/s]"]
+    def get_power(self, v):
+        v = np.array(v)
+        wind_speed = self.power_curve_data[:, 0]
+        power_value = self.power_curve_data[:, 1]
 
-#print(a)
+        return np.interp(v, wind_speed, power_value)
 
-###### power law profile #####
-# Apply the power law to compute wind speeds at height z = 90m
-# lat_8_lon_55_5 = compute_power_law(lat_8_lon_55_5.copy(), 10, 100, 90)
-# lat_8_lon_55_75 = compute_power_law(lat_8_lon_55_75.copy(), 10, 100, 90)
-# lat_7_75_lon_55_5 = compute_power_law(lat_7_75_lon_55_5.copy(), 10, 100, 90)
-# lat_7_75_lon_55_75 = compute_power_law(lat_7_75_lon_55_75.copy(), 10, 100, 90)
-###### ######### #####
 
-interpolatedTable = interpolation(7.93, 55.65, lat_8_lon_55_5, lat_8_lon_55_75, lat_7_75_lon_55_5, lat_7_75_lon_55_75)
-print(interpolatedTable)
+class TurbineParameters:
+    """
+    Parameters for the wind turbine.
+    """
+    def __init__(self, rotor_diameter, hub_height, rated_power, v_in, v_rated, v_out, name=None):
+        self.rotor_diameter = rotor_diameter
+        self.hub_height = hub_height
+        self.rated_power = rated_power
+        self.v_in = v_in
+        self.v_rated = v_rated
+        self.v_out = v_out
+        self.name = name
 
-height = 90
-height_speed = compute_power_law(interpolatedTable, height) 
-print(height_speed)
-#######snippet code to make stats work
+    def showcase(self):
+        print(f"Rotor Diameter: {self.rotor_diameter} m")
+        print(f"Hub Height: {self.hub_height} m")
+        print(f"Rated Power: {self.rated_power} kW")
+        print(f"Cut-in Wind Speed: {self.v_in} m/s")
+        print(f"Rated Wind Speed: {self.v_rated} m/s")
+        print(f"Cut-out Wind Speed: {self.v_out} m/s")
+        if self.name:
+            print(f"Turbine Name: {self.name}")
+    
+    def csvReader(self, filePath):
+        MW = []
+        for path in filePath:
+            df = pd.read_csv(path)
+            MW.append(df)
+        return MW
+    
+    def power_curve(self, MW):
+        power_curve = []
+        for i in range(len(MW)):
+            power_curve.append(MW[i].iloc[:, :2].values)
+        return power_curve
 
-# Choose which height to analyze: 10 or 100?
- 
-col_name = f"wind_speed_at_{height}[m/s]"
-
-# 1) extract a clean 1-D numpy array
-speed_array = height_speed[col_name].to_numpy()
-speed_array = speed_array[~np.isnan(speed_array)]
-
-# 2) fit the Weibull distribution
-k, A = fit_weibull(speed_array)
-print(f"Fitted Weibull at {height} m: k = {k:.2f}, A = {A:.2f}")
-
-# 3) plot the histogram vs. the fitted PDF
-plot_weibull(speed_array, k, A, height)
 

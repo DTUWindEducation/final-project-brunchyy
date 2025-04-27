@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-from src.turbine import GeneralWindTurbine, WindTurbine
+from src.__init__ import GeneralWindTurbine, WindTurbine
 
 # Load power curve from CSV
 df = pd.read_csv("inputs/NREL_Reference_5MW_126.csv")
