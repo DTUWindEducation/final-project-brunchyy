@@ -105,9 +105,30 @@ def interpolation(lat, lon, lat_8_lon_55_5, lat_8_lon_55_75, lat_7_75_lon_55_5, 
 
     return interpolatedTable
     
+###### power law profile #####
+def compute_power_law(wind_profile, z1, z2, height):
+    """
+    Compute wind speed at a given height using the power law.
+    wind_profile: DataFrame with wind data for one location.
+    z1: Height corresponding to U1 [m].
+    z2: Height corresponding to U2 [m].
+    height: Target height at which wind speed is computed [m].
+    """
+    # Extract the known wind speeds
+    U1 = wind_profile["wind_speed_10m [m/s]"]
+    U2 = wind_profile["wind_speed_100m [m/s]"]
     
+    # Calculate the shear exponent alpha
+    alpha = np.log(U2 / U1) / np.log(z2 / z1)
+    
+    # Compute the wind speed at the new height
+    U_z = U2 * (height / z2) ** alpha
 
+    # Add new column
+    wind_profile[f"wind_speed_{height}m [m/s]"] = U_z
 
+    return wind_profile
+###### ######### #####
 
 file_path = ["inputs/1997-1999.nc", "inputs/2000-2002.nc", "inputs/2003-2005.nc", "inputs/2006-2008.nc", "inputs/2009-2011.nc", "inputs/2012-2014.nc", "inputs/2015-2017.nc", "inputs/2018-2020.nc"]
 
@@ -135,6 +156,14 @@ lat_8_lon_55_5, lat_8_lon_55_75, lat_7_75_lon_55_5, lat_7_75_lon_55_75 = nc_sort
 #a["Test"] = df["wind_speed_10m [m/s]"]
 
 #print(a)
+
+###### power law profile #####
+# Apply the power law to compute wind speeds at height z = 90m
+lat_8_lon_55_5 = compute_power_law(lat_8_lon_55_5.copy(), 10, 100, 90)
+lat_8_lon_55_75 = compute_power_law(lat_8_lon_55_75.copy(), 10, 100, 90)
+lat_7_75_lon_55_5 = compute_power_law(lat_7_75_lon_55_5.copy(), 10, 100, 90)
+lat_7_75_lon_55_75 = compute_power_law(lat_7_75_lon_55_75.copy(), 10, 100, 90)
+###### ######### #####
 
 interpolatedTable = interpolation(7.93, 55.65, lat_8_lon_55_5, lat_8_lon_55_75, lat_7_75_lon_55_5, lat_7_75_lon_55_75)
 print(interpolatedTable)
