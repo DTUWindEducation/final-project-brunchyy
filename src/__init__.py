@@ -125,12 +125,14 @@ def compute_power_law(interpolatedTable, height, z1=10, z2=100):
     # Compute the wind speed at the new height
     U_z = U2 * (height / z2) ** alpha
 
-    # # Add new column
-    # interpolatedTable[f"wind_speed_{height}m [m/s]"] = U_z
+    # Computing the interpolated direction
+    y_percent = (height - z1) / (z2 - z1)
+    direction_z = interpolatedTable["wind_direction_10m [degrees]"]+ (interpolatedTable["wind_direction_100m [degrees]"] - interpolatedTable["wind_direction_10m [degrees]"]) * y_percent
 
     interpolatedTable_height = pd.DataFrame({
         "valid_time": interpolatedTable["valid_time"],
-        f"wind_speed_at_{height}[m/s]": U_z
+        f"wind_speed_at_{height}[m/s]": U_z,
+        f"direction_at_{height}[degrees]": direction_z
     })
 
     return interpolatedTable_height
