@@ -4,7 +4,7 @@ import xarray as xr
 import matplotlib.pyplot as plt
 from scipy.stats import weibull_min
 from windrose import WindroseAxes
-
+from scipy.integrate import quad
 
 def nc_reader(file_paths):
     """
@@ -290,4 +290,26 @@ def plot_power_curve(wind_speeds, rotor_diameter, hub_height, rated_power, v_in,
     plt.grid(True)
     plt.show()
    
+
+# def AEP(availability=1):
+    
+#     AEP = availability * 8760 * quad(power_curve, u_in, u_out)
+
+
+def compute_aep(turbine, k, A, u_in, u_out, availability=1.0):
+    """
+    Compute the Annual Energy Production (AEP) in kWh.
+    - turbine: an object with a .get_power(u) method (like WindTurbine)
+    - k, A: Weibull parameters (shape, scale)
+    - u_in, u_out: cut-in and cut-out speeds
+    - availability: assumed 1.0 unless stated otherwise
+    """
+    from scipy.integrate import quad
+
+    def integrand(u):
+        return turbine.get_power(u) * weibull_min.pdf(u, k, scale=A)
+
+    energy_per_year, _ = quad(integrand, u_in, u_out)
+    AEP = availability * 8760 * energy_per_year  # kWh/year
+    return AEP
 
