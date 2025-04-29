@@ -5,6 +5,7 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import src.__init__ as init
+from windrose import WindroseAxes
 
 # Defining data file paths
 # this makes path in [0] the MW5 and [1] the MW8
@@ -97,4 +98,7 @@ print(f"Fitted Weibull at {height} m: k = {k:.2f}, A = {A:.2f}")
 
 # 3) plot the histogram vs. the fitted PDF
 init.plot_weibull(speed_array, k, A, height)
+
+# wind rose diagram
+init.wind_rose(height_speed, height)
 

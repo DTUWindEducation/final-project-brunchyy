@@ -3,6 +3,7 @@ import pandas as pd
 import xarray as xr
 import matplotlib.pyplot as plt
 from scipy.stats import weibull_min
+from windrose import WindroseAxes
 
 
 def nc_reader(file_paths):
@@ -169,6 +170,20 @@ def plot_weibull(speed_data, k, A, height, bins=30):
     plt.ylabel('Probability Density')
     plt.legend()
     plt.grid(True)
+    plt.show()
+
+def wind_rose(height_speed, height):
+    
+    # Extract wind direction and speed at given height [m]
+    wind_speed = height_speed[f"wind_speed_at_{height}[m/s]"]
+    wind_dir = height_speed[f"direction_at_{height}[degrees]"]
+
+    # Create a windrose plot
+    plt.figure(figsize=(8, 8))
+    ax = WindroseAxes.from_ax()
+    ax.bar(wind_dir, wind_speed, normed=True, opening=0.8, edgecolor='white', bins=np.arange(0, 30, 5))
+    ax.set_legend()
+    plt.title(f"Wind Rose at {height} m")
     plt.show()
 
 
