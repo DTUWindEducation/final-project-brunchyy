@@ -100,5 +100,6 @@ print(f"Fitted Weibull at {height} m: k = {k:.2f}, A = {A:.2f}")
 init.plot_weibull(speed_array, k, A, height)
 
 # wind rose diagram
-init.wind_rose(height_speed, height)
+init.wind_rose(height_speed, height) # IMPORTANT add in README.md "pip install windrose" so people run it #################################################
+
 
