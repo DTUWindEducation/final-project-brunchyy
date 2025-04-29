@@ -127,7 +127,10 @@ def compute_power_law(interpolatedTable, height, z1=10, z2=100):
 
     # Computing the interpolated direction
     y_percent = (height - z1) / (z2 - z1)
-    direction_z = interpolatedTable["wind_direction_10m [degrees]"]+ (interpolatedTable["wind_direction_100m [degrees]"] - interpolatedTable["wind_direction_10m [degrees]"]) * y_percent
+    if height <= 100: 
+        direction_z = interpolatedTable["wind_direction_10m [degrees]"]+ (interpolatedTable["wind_direction_100m [degrees]"] - interpolatedTable["wind_direction_10m [degrees]"]) * y_percent
+    else:
+        direction_z = interpolatedTable["wind_direction_100m [degrees]"]
 
     interpolatedTable_height = pd.DataFrame({
         "valid_time": interpolatedTable["valid_time"],
@@ -160,7 +163,7 @@ def plot_weibull(speed_data, k, A, height, bins=30):
             alpha=0.6,
             label='Observed')
     plt.plot(centers, pdf, lw=2,
-             label=f'Weibull k={k:.2f}, A={A:.2f}')
+            label=f'Weibull k={k:.2f}, A={A:.2f}')
     plt.title(f"Weibull Distribution Fit at {height} m")
     plt.xlabel('Wind Speed [m/s]')
     plt.ylabel('Probability Density')
