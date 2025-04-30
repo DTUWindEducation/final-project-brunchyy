@@ -1,9 +1,8 @@
-```markdown
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/zjSXGKeR)
 
 # Wind Resource Assessment Package
 
-**Team:** Alicia Masero, August …  , Sofia …
+**Team:** Alicia Masero, Sofia …, August …  
 
 ---
 
@@ -56,7 +55,6 @@ This package implements Questions 1–8 of the DTU “Scientific Programming for
    ```bash
    git clone https://github.com/your-org/your-repo.git
    cd your-repo
-   ```
 
 2. **Install dependencies**  
    ```bash
