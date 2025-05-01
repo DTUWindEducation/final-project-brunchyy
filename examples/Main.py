@@ -84,7 +84,7 @@ init.wind_rose(height_speed, height) # IMPORTANT add in README.md "pip install w
 
 # AEP
 # Choose a turbine to evaluate
-chosen_turbine = detailed_turbine_5MW  # or detailed_turbine_15MW
+chosen_turbine = init.WindTurbine(rotor_diameter, hub_height, rated_power, v_in, v_rated, v_out, power_curve[0], "LEANWIND_5MW_126_Detailed")  # or detailed_turbine_15MW
 
 # Use the fitted Weibull parameters
 aep = init.compute_aep(chosen_turbine, k, A, chosen_turbine.v_in, chosen_turbine.v_out)

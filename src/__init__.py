@@ -291,10 +291,6 @@ def plot_power_curve(wind_speeds, rotor_diameter, hub_height, rated_power, v_in,
     plt.show()
    
 
-# def AEP(availability=1):
-    
-#     AEP = availability * 8760 * quad(power_curve, u_in, u_out)
-
 
 def compute_aep(turbine, k, A, u_in, u_out, availability=1.0):
     """
