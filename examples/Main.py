@@ -35,35 +35,12 @@ MW = turbineParams.csvReader(filePath)
 power_curve = turbineParams.power_curve(MW)
 
 
-general_turbine = init.GeneralWindTurbine(rotor_diameter, hub_height, rated_power, v_in, v_rated, v_out, "LEANWIND_5MW_126_General")
-
-detailed_turbine_5MW = init.WindTurbine(rotor_diameter, hub_height, rated_power, v_in, v_rated, v_out, power_curve[0], "LEANWIND_5MW_126_Detailed")
-
-detailed_turbine_15MW = init.WindTurbine(rotor_diameter, hub_height, rated_power, v_in, v_rated, v_out, power_curve[1], "LEANWIND_15MW_240_Detailed")
-
-
-
 
 wind_speeds = np.linspace(0, 30, 300)
 
+init.plot_power_curve(wind_speeds, rotor_diameter, hub_height, rated_power, v_in, v_rated, v_out, power_curve)
 
 
-# Compute power outputs for each wind speed using both turbine models
-power_general = np.array([general_turbine.get_power(v) for v in wind_speeds])
-power_detailed_5MW = np.array([detailed_turbine_5MW.get_power(v) for v in wind_speeds])
-power_detailed_15MW = np.array([detailed_turbine_15MW.get_power(v) for v in wind_speeds])
-
-# Plot the power curves
-plt.figure(figsize=(10, 6))
-plt.plot(wind_speeds, power_general, label="GeneralWindTurbine", lw=2)
-plt.plot(wind_speeds, power_detailed_5MW, label="WindTurbine (Interpolated) 5MW", lw=2, linestyle='--')
-plt.plot(wind_speeds, power_detailed_15MW, label="WindTurbine (Interpolated) 15MW", lw=2, linestyle=':')
-plt.xlabel("Wind Speed (m/s)")
-plt.ylabel("Power Output (kW)")
-plt.title("Comparison of Wind Turbine Power Curves")
-plt.legend()
-plt.grid(True)
-plt.show()
 
 
 file_path = ["inputs/1997-1999.nc", "inputs/2000-2002.nc", "inputs/2003-2005.nc", "inputs/2006-2008.nc", "inputs/2009-2011.nc", "inputs/2012-2014.nc", "inputs/2015-2017.nc", "inputs/2018-2020.nc"]
