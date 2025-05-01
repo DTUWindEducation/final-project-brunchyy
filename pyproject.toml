@@ -1,0 +1,38 @@
+# An extremely complicated pyproject.toml
+# Many more options here: https://packaging.python.org/en/latest/guides/writing-pyproject-toml/
+
+# How to build your package. "[S]trongly recommended" to include this,
+# per the docs. We use hatchling, default on Python docs.
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+# Information on the package
+[project]
+name = "wra_brunchyy"
+version = "0.1.0"
+description = "A wind resource assessment tool using ERA5 reanalysis data, developed for DTU Wind course 46120."
+authors = [
+    { name = "Sofia", email = "s240082@dtu.dk" },
+    { name = "August", email = "s216944@dtu.dk" },
+    { name = "Alicia", email = "s243140@dtu.dk" }
+]
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.8"
+
+dependencies = [
+    "numpy",
+    "pandas",
+    "matplotlib",
+    "scipy",
+    "xarray",
+    "netCDF4",
+    "windrose"
+]
+
+[project.urls]
+Repository = "https://github.com/DTUWindEducation/final-project-brunchyy"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]

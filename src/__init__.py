@@ -4,7 +4,7 @@ import xarray as xr
 import matplotlib.pyplot as plt
 from scipy.stats import weibull_min
 from windrose import WindroseAxes
-
+from scipy.integrate import quad
 
 def nc_reader(file_paths):
     """
@@ -293,3 +293,51 @@ class TurbineParameters:
         for i in range(len(MW)):
             power_curve.append(MW[i].iloc[:, :2].values)
         return power_curve
+<<<<<<< HEAD
+=======
+    
+def plot_power_curve(wind_speeds, rotor_diameter, hub_height, rated_power, v_in, v_rated, v_out, power_curve):
+    
+    general_turbine = GeneralWindTurbine(rotor_diameter, hub_height, rated_power, v_in, v_rated, v_out, "LEANWIND_5MW_126_General")
+
+    detailed_turbine_5MW = WindTurbine(rotor_diameter, hub_height, rated_power, v_in, v_rated, v_out, power_curve[0], "LEANWIND_5MW_126_Detailed")
+
+    detailed_turbine_15MW = WindTurbine(rotor_diameter, hub_height, rated_power, v_in, v_rated, v_out, power_curve[1], "LEANWIND_15MW_240_Detailed")
+
+    # Compute power outputs for each wind speed using both turbine models
+    power_general = np.array([general_turbine.get_power(v) for v in wind_speeds])
+    power_detailed_5MW = np.array([detailed_turbine_5MW.get_power(v) for v in wind_speeds])
+    power_detailed_15MW = np.array([detailed_turbine_15MW.get_power(v) for v in wind_speeds])
+
+    # Plot the power curves
+    plt.figure(figsize=(10, 6))
+    plt.plot(wind_speeds, power_general, label="GeneralWindTurbine", lw=2)
+    plt.plot(wind_speeds, power_detailed_5MW, label="WindTurbine (Interpolated) 5MW", lw=2, linestyle='--')
+    plt.plot(wind_speeds, power_detailed_15MW, label="WindTurbine (Interpolated) 15MW", lw=2, linestyle=':')
+    plt.xlabel("Wind Speed (m/s)")
+    plt.ylabel("Power Output (kW)")
+    plt.title("Comparison of Wind Turbine Power Curves")
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+   
+
+
+def compute_aep(turbine, k, A, u_in, u_out, availability=1.0):
+    """
+    Compute the Annual Energy Production (AEP) in kWh.
+    - turbine: an object with a .get_power(u) method (like WindTurbine)
+    - k, A: Weibull parameters (shape, scale)
+    - u_in, u_out: cut-in and cut-out speeds
+    - availability: assumed 1.0 unless stated otherwise
+    """
+    from scipy.integrate import quad
+
+    def integrand(u):
+        return turbine.get_power(u) * weibull_min.pdf(u, k, scale=A)
+
+    energy_per_year, _ = quad(integrand, u_in, u_out)
+    AEP = availability * 8760 * energy_per_year  # kWh/year
+    return AEP
+
+>>>>>>> 5f0cd559f335ec37c417cb345ef3854a600ac261
