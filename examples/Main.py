@@ -6,6 +6,8 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import src.__init__ as init
 from windrose import WindroseAxes
+from scipy.integrate import quad
+
 
 # Defining data file paths
 # this makes path in [0] the MW5 and [1] the MW8
@@ -78,5 +80,15 @@ init.plot_weibull(speed_array, k, A, height)
 
 # wind rose diagram
 init.wind_rose(height_speed, height) # IMPORTANT add in README.md "pip install windrose" so people run it #################################################
+
+
+# AEP
+# Choose a turbine to evaluate
+chosen_turbine = detailed_turbine_5MW  # or detailed_turbine_15MW
+
+# Use the fitted Weibull parameters
+aep = init.compute_aep(chosen_turbine, k, A, chosen_turbine.v_in, chosen_turbine.v_out)
+
+print(f"AEP for {chosen_turbine.name} at {height} m = {aep/1e6:.2f} MWh/year")
 
 
