@@ -4,9 +4,11 @@ import numpy as np
 import pandas as pd
 import xarray as xr
 import pytest
-
+import sys
+import os
 # import everything from your src/__init__.py
-from src import (
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from src.__init__ import (
     nc_reader, wind_speed, nc_sorter, interpolation,
     compute_power_law, fit_weibull, plot_weibull, wind_rose
 )

@@ -293,9 +293,8 @@ class TurbineParameters:
         for i in range(len(MW)):
             power_curve.append(MW[i].iloc[:, :2].values)
         return power_curve
-<<<<<<< HEAD
-=======
     
+
 def plot_power_curve(wind_speeds, rotor_diameter, hub_height, rated_power, v_in, v_rated, v_out, power_curve):
     
     general_turbine = GeneralWindTurbine(rotor_diameter, hub_height, rated_power, v_in, v_rated, v_out, "LEANWIND_5MW_126_General")
@@ -339,5 +338,3 @@ def compute_aep(turbine, k, A, u_in, u_out, availability=1.0):
     energy_per_year, _ = quad(integrand, u_in, u_out)
     AEP = availability * 8760 * energy_per_year  # kWh/year
     return AEP
-
->>>>>>> 5f0cd559f335ec37c417cb345ef3854a600ac261
