@@ -29,7 +29,9 @@ def wind_speed(df2):
 
     df2["wind_direction_100m [degrees]"] = np.arctan2(df2["u100"], df2["v100"]) * 180 / np.pi + 180
 
-    df = df2[["valid_time", "latitude", "longitude", "wind_speed_10m [m/s]", "wind_speed_100m [m/s]","wind_direction_10m [degrees]", "wind_direction_100m [degrees]"]]
+    df = df2[["valid_time", "latitude", "longitude", "wind_speed_10m [m/s]",
+              "wind_speed_100m [m/s]", "wind_direction_10m [degrees]",
+              "wind_direction_100m [degrees]"]]
 
     return df
 
@@ -47,8 +49,9 @@ def nc_sorter(df):
     for i, row in coords.iterrows():
         lat, lon = row["latitude"], row["longitude"]
         key = f"lat_{lat}_lon_{lon}"
-        tables[key] = df_sorted[(df_sorted["latitude"] == lat) & (df_sorted["longitude"] == lon)].reset_index(drop=True)
-        
+        tables[key] = df_sorted[(df_sorted["latitude"] == lat)
+        & (df_sorted["longitude"] == lon)].reset_index(drop=True)
+
     lat_8_lon_55_5 = tables["lat_8.0_lon_55.5"]
     lat_8_lon_55_75 = tables["lat_8.0_lon_55.75"]
     lat_7_75_lon_55_5 = tables["lat_7.75_lon_55.5"]
@@ -57,7 +60,9 @@ def nc_sorter(df):
 
 
 
-def interpolation(lat, lon, lat_8_lon_55_5, lat_8_lon_55_75, lat_7_75_lon_55_5, lat_7_75_lon_55_75):   #This only works for kordinates in the sqare
+def interpolation(lat, lon, lat_8_lon_55_5, lat_8_lon_55_75,
+                  lat_7_75_lon_55_5, lat_7_75_lon_55_75):
+    #This only works for kordinates in the sqare
     """
     Interpoler vindhastighed og retning for givet latitude og longitude.
     """
@@ -67,31 +72,51 @@ def interpolation(lat, lon, lat_8_lon_55_5, lat_8_lon_55_75, lat_7_75_lon_55_5, 
 
     inter = {}
 
-    inter["latTop10Speed"] = lat_7_75_lon_55_5["wind_speed_10m [m/s]"] + (lat_8_lon_55_5["wind_speed_10m [m/s]"]-lat_7_75_lon_55_5["wind_speed_10m [m/s]"])*xpercent
-    inter["latBottom10Speed"] = lat_7_75_lon_55_75["wind_speed_10m [m/s]"] + (lat_8_lon_55_75["wind_speed_10m [m/s]"]-lat_7_75_lon_55_75["wind_speed_10m [m/s]"])*xpercent
+    inter["latTop10Speed"] = lat_7_75_lon_55_5["wind_speed_10m [m/s]"]
+    + (lat_8_lon_55_5["wind_speed_10m [m/s]"]
+       - lat_7_75_lon_55_5["wind_speed_10m [m/s]"]) * xpercent
+    inter["latBottom10Speed"] = lat_7_75_lon_55_75["wind_speed_10m [m/s]"]
+    + (lat_8_lon_55_75["wind_speed_10m [m/s]"]
+       - lat_7_75_lon_55_75["wind_speed_10m [m/s]"]) * xpercent
 
-    inter["interValue10Speed"] =  inter["latBottom10Speed"] + (inter["latTop10Speed"] - inter["latBottom10Speed"]) * ypercent
-
-
-
-    inter["latTop100Speed"] = lat_7_75_lon_55_5["wind_speed_100m [m/s]"] + (lat_8_lon_55_5["wind_speed_100m [m/s]"]-lat_7_75_lon_55_5["wind_speed_100m [m/s]"])*xpercent
-    inter["latBottom100Speed"] = lat_7_75_lon_55_75["wind_speed_100m [m/s]"] + (lat_8_lon_55_75["wind_speed_100m [m/s]"]-lat_7_75_lon_55_75["wind_speed_100m [m/s]"])*xpercent
-
-    inter["interValue100Speed"] =  inter["latBottom100Speed"] + (inter["latTop100Speed"] - inter["latBottom100Speed"]) * ypercent
+    inter["interValue10Speed"] =  inter["latBottom10Speed"]
+    + (inter["latTop10Speed"] - inter["latBottom10Speed"]) * ypercent
 
 
 
-    inter["latTop10Direction"] = lat_7_75_lon_55_75["wind_direction_10m [degrees]"] + (lat_8_lon_55_75["wind_direction_10m [degrees]"]-lat_7_75_lon_55_75["wind_direction_10m [degrees]"])*xpercent
-    inter["latBottom10Direction"] = lat_7_75_lon_55_5["wind_direction_10m [degrees]"] + (lat_8_lon_55_5["wind_direction_10m [degrees]"]-lat_7_75_lon_55_5["wind_direction_10m [degrees]"])*xpercent
+    inter["latTop100Speed"] = lat_7_75_lon_55_5["wind_speed_100m [m/s]"]
+    + (lat_8_lon_55_5["wind_speed_100m [m/s]"] -
+       lat_7_75_lon_55_5["wind_speed_100m [m/s]"]) * xpercent
+    inter["latBottom100Speed"] = lat_7_75_lon_55_75["wind_speed_100m [m/s]"]
+    + (lat_8_lon_55_75["wind_speed_100m [m/s]"]
+       - lat_7_75_lon_55_75["wind_speed_100m [m/s]"]) * xpercent
 
-    inter["interValue10Direction"] =  inter["latBottom10Direction"] + (inter["latTop10Direction"] - inter["latBottom10Direction"]) * ypercent
+    inter["interValue100Speed"] =  inter["latBottom100Speed"]
+    + (inter["latTop100Speed"] - inter["latBottom100Speed"]) * ypercent
 
 
 
-    inter["latTop100Direction"] = lat_7_75_lon_55_75["wind_direction_100m [degrees]"] + (lat_8_lon_55_75["wind_direction_100m [degrees]"]-lat_7_75_lon_55_75["wind_direction_100m [degrees]"])*xpercent
-    inter["latBottom100Direction"] = lat_7_75_lon_55_5["wind_direction_100m [degrees]"] + (lat_8_lon_55_5["wind_direction_100m [degrees]"]-lat_7_75_lon_55_5["wind_direction_100m [degrees]"])*xpercent
+    inter["latTop10Direction"] = lat_7_75_lon_55_75["wind_direction_10m [degrees]"]
+    + (lat_8_lon_55_75["wind_direction_10m [degrees]"]
+       - lat_7_75_lon_55_75["wind_direction_10m [degrees]"]) * xpercent
+    inter["latBottom10Direction"] = lat_7_75_lon_55_5["wind_direction_10m [degrees]"]
+    + (lat_8_lon_55_5["wind_direction_10m [degrees]"]
+       - lat_7_75_lon_55_5["wind_direction_10m [degrees]"]) * xpercent
 
-    inter["interValue100Direction"] =  inter["latBottom100Direction"] + (inter["latTop100Direction"] - inter["latBottom100Direction"]) * ypercent
+    inter["interValue10Direction"] =  inter["latBottom10Direction"]
+    + (inter["latTop10Direction"] - inter["latBottom10Direction"]) * ypercent
+
+
+
+    inter["latTop100Direction"] = lat_7_75_lon_55_75["wind_direction_100m [degrees]"]
+    + (lat_8_lon_55_75["wind_direction_100m [degrees]"]
+       - lat_7_75_lon_55_75["wind_direction_100m [degrees]"]) * xpercent
+    inter["latBottom100Direction"] = lat_7_75_lon_55_5["wind_direction_100m [degrees]"]
+    + (lat_8_lon_55_5["wind_direction_100m [degrees]"]
+       - lat_7_75_lon_55_5["wind_direction_100m [degrees]"]) * xpercent
+
+    inter["interValue100Direction"] =  inter["latBottom100Direction"]
+    + (inter["latTop100Direction"] - inter["latBottom100Direction"]) * ypercent
 
 
 
@@ -102,10 +127,10 @@ def interpolation(lat, lon, lat_8_lon_55_5, lat_8_lon_55_75, lat_7_75_lon_55_5, 
         "wind_direction_10m [degrees]": inter["interValue10Direction"],
         "wind_direction_100m [degrees]": inter["interValue100Direction"]
     })
-    
+
 
     return interpolatedTable
-    
+
 
 
 def compute_power_law(interpolatedTable, height, z1=10, z2=100):
@@ -117,19 +142,21 @@ def compute_power_law(interpolatedTable, height, z1=10, z2=100):
     height: Target height at which wind speed is computed [m].
     """
     # Extract the known wind speeds
-    U1 = interpolatedTable["wind_speed_10m [m/s]"]
-    U2 = interpolatedTable["wind_speed_100m [m/s]"]
-    
+    u1 = interpolatedTable["wind_speed_10m [m/s]"]
+    u2 = interpolatedTable["wind_speed_100m [m/s]"]
+
     # Calculate the shear exponent alpha
-    alpha = np.log(U2 / U1) / np.log(z2 / z1)
-    
+    alpha = np.log(u2 / u1) / np.log(z2 / z1)
+
     # Compute the wind speed at the new height
-    U_z = U2 * (height / z2) ** alpha
+    U_z = u2 * (height / z2) ** alpha
 
     # Computing the interpolated direction
     y_percent = (height - z1) / (z2 - z1)
-    if height <= 100: 
-        direction_z = interpolatedTable["wind_direction_10m [degrees]"]+ (interpolatedTable["wind_direction_100m [degrees]"] - interpolatedTable["wind_direction_10m [degrees]"]) * y_percent
+    if height <= 100:
+        direction_z = interpolatedTable["wind_direction_10m [degrees]"]
+        + (interpolatedTable["wind_direction_100m [degrees]"]
+           - interpolatedTable["wind_direction_10m [degrees]"]) * y_percent
     else:
         direction_z = interpolatedTable["wind_direction_100m [degrees]"]
 
@@ -146,8 +173,8 @@ def fit_weibull(speed_data):
     Fit a 2-parameter Weibull to the input wind-speed array.
     Returns: k (shape), A (scale).
     """
-    k, loc, A = weibull_min.fit(speed_data, floc=0)
-    return k, A
+    k, loc, a = weibull_min.fit(speed_data, floc=0)
+    return k, a
 
 def plot_weibull(speed_data, k, A, height, bins=30):
     """
@@ -173,7 +200,7 @@ def plot_weibull(speed_data, k, A, height, bins=30):
     plt.show()
 
 def wind_rose(height_speed, height):
-    
+
     # Extract wind direction and speed at given height [m]
     wind_speed = height_speed[f"wind_speed_at_{height}[m/s]"]
     wind_dir = height_speed[f"direction_at_{height}[degrees]"]
@@ -181,7 +208,8 @@ def wind_rose(height_speed, height):
     # Create a windrose plot
     plt.figure(figsize=(8, 8))
     ax = WindroseAxes.from_ax()
-    ax.bar(wind_dir, wind_speed, normed=True, opening=0.8, edgecolor='white', bins=np.arange(0, 30, 5))
+    ax.bar(wind_dir, wind_speed, normed=True, opening=0.8,
+           edgecolor='white', bins=np.arange(0, 30, 5))
     ax.set_legend()
     plt.title(f"Wind Rose at {height} m")
     plt.show()
@@ -203,22 +231,23 @@ class GeneralWindTurbine:
 
     def get_power(self, v):
         if v < self.v_in or v > self.v_out:
-            P = 0
+            p = 0
         elif self.v_in <= v < self.v_rated:
-            P =self.rated_power * (v/self.v_rated) ** 3
+            p =self.rated_power * (v/self.v_rated) ** 3
         elif self.v_rated <= v < self.v_out:
-            P = self.rated_power
-        return P
+            p = self.rated_power
+        return p
 
 
 class WindTurbine(GeneralWindTurbine):
     """
     Wind turbine with actual power curve data for interpolation.
     """
-    def __init__(self, rotor_diameter, hub_height, rated_power, v_in, v_rated, v_out, power_curve_data, name=None):
-        # Using the parent class __init__ to get the self values 
+    def __init__(self, rotor_diameter, hub_height, rated_power,
+                 v_in, v_rated, v_out, power_curve_data, name=None):
+        # Using the parent class __init__ to get the self values
         super().__init__(rotor_diameter, hub_height, rated_power, v_in, v_rated, v_out, name)
-        
+
         self.power_curve_data = np.array(power_curve_data)
 
     def get_power(self, v):
@@ -251,18 +280,16 @@ class TurbineParameters:
         print(f"Cut-out Wind Speed: {self.v_out} m/s")
         if self.name:
             print(f"Turbine Name: {self.name}")
-    
+
     def csvReader(self, filePath):
         MW = []
         for path in filePath:
             df = pd.read_csv(path)
             MW.append(df)
         return MW
-    
+
     def power_curve(self, MW):
         power_curve = []
         for i in range(len(MW)):
             power_curve.append(MW[i].iloc[:, :2].values)
         return power_curve
-
-
