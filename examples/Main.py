@@ -45,7 +45,7 @@ init.plot_power_curve(wind_speeds, rotor_diameter, hub_height, rated_power, v_in
 
 
 
-file_path = ["inputs/1997-1999.nc", "inputs/2000-2002.nc", "inputs/2003-2005.nc", "inputs/2006-2008.nc", "inputs/2009-2011.nc", "inputs/2012-2014.nc", "inputs/2015-2017.nc", "inputs/2018-2020.nc"]
+file_path = ["inputs/1997-1999.nc", "inputs/2000-2002.nc", "inputs/2003-2005.nc", "inputs/2006-2008.nc"]
 
 df2 = init.nc_reader(file_path)
 
