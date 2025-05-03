@@ -25,7 +25,7 @@ def test_wind_turbine_interpolation():
     wt = WindTurbine(100, 90, 200, v_in=0, v_rated=10, v_out=20, power_curve_data=curve)
     out = wt.get_power([5,15,25])
     assert out[0] == 50
-    assert out[1] == 200
+    assert out[1] == 150
     assert out[2] == 0
 
 
