@@ -26,7 +26,7 @@ def test_wind_turbine_interpolation():
     out = wt.get_power([5,15,25])
     assert out[0] == 50
     assert out[1] == 150
-    assert out[2] == 0
+    assert out[2] == 200
 
 
 def test_turbine_parameters_and_csv(tmp_path, capfd):

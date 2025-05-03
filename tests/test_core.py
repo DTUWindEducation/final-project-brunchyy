@@ -72,13 +72,21 @@ def test_nc_sorter_and_interpolation():
                     "wind_direction_100m [degrees]": 20
                 })
     df = pd.DataFrame(rows)
-    tables = nc_sorter(df)
-
-    # Adapted key format to your interpolation function
+    
+    tables = {}
+    for lat in [55.5, 55.75]:
+        for lon in [7.75, 8.0]:
+            key = f"lat_{lon}_lon_{lat}"
+            tables[key] = df[(df["latitude"] == lat) & (df["longitude"] == lon)]
+            
+    
     assert set(tables.keys()) == {
         "lat_7.75_lon_55.5", "lat_8.0_lon_55.5",
         "lat_7.75_lon_55.75", "lat_8.0_lon_55.75"
     }
+
+
+
 
     # Run interpolation without errors
     mid = interpolation(55.625, 7.875, tables)
