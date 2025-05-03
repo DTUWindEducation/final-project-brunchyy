@@ -316,13 +316,13 @@ class TurbineParameters:
             mw.append(df)
         return mw
 
-    def power_curve(self, MW):
+    def power_curve(self, mw):
         """
         Extracts the power curve data from the DataFrames.
         """
         power_curve = []
-        for i in range(len(MW)):
-            power_curve.append(MW[i].iloc[:, :2].values)
+        for i in range(len(mw)):
+            power_curve.append(mw[i].iloc[:, :2].values)
         return power_curve
 
 
