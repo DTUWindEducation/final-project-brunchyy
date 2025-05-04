@@ -9,7 +9,8 @@ from windrose import WindroseAxes
 from scipy.integrate import quad
 
 
-
+# Create outputs/ folder if it doesn't exist
+os.makedirs("outputs", exist_ok=True)
 
 
 # Defining data file paths
@@ -35,14 +36,18 @@ turbineParams = init.TurbineParameters(rotor_diameter, hub_height, rated_power, 
 # Showcasing the parameters
 turbineParams.showcase()
 
+
+
 MW = turbineParams.csv_reader(filePath)
 power_curve = turbineParams.power_curve(MW)
+
+
 
 wind_speeds = np.linspace(0, 30, 300)
 
 init.plot_power_curve(wind_speeds, rotor_diameter, hub_height, rated_power, v_in, v_rated, v_out, power_curve)
 
-
+# Defining the file paths for the wind data
 file_path = ["inputs/1997-1999.nc", "inputs/2000-2002.nc", "inputs/2003-2005.nc", "inputs/2006-2008.nc"]
 
 df2 = init.nc_reader(file_path)
@@ -50,6 +55,8 @@ df2 = init.nc_reader(file_path)
 df = init.wind_speed_df(df2)
 
 tables = init.nc_sorter(df)
+
+
 
 interpolated_table = init.interpolation(7.93, 55.65, tables)
 print(interpolated_table)
@@ -73,7 +80,7 @@ print(f"Fitted Weibull at {height} m: k = {k:.2f}, A = {A:.2f}")
 init.plot_weibull(speed_array, k, A, height)
 
 # wind rose diagram
-init.wind_rose(height_speed, height)
+init.wind_rose(height_speed, height) # IMPORTANT add in README.md "pip install windrose" so people run it #################################################
 
 
 # AEP
@@ -86,3 +93,13 @@ aep = init.compute_aep(chosen_turbine, k, A, chosen_turbine.v_in, chosen_turbine
 print(f"AEP for {chosen_turbine.name} at {height} m = {aep/1e6:.2f} MWh/year")
 
 
+# Save in the outputs folder the results
+
+# Save the interpolated data and height-adjusted speeds
+interpolated_table.to_csv("outputs/interpolated_data.csv", index=False)
+height_speed.to_csv(f"outputs/wind_data_{height}m.csv", index=False)
+
+
+# Save AEP result to a text file
+with open("outputs/aep_result.txt", "w") as f:
+    f.write(f"AEP for {chosen_turbine.name} at {height} m = {aep/1e6:.2f} MWh/year\n")
