@@ -1,8 +1,3 @@
-Ragionato per un secondo
-
-
-Here’s the updated README.md with your additional instructions on environment recreation, test‑coverage, and pylint. I’ve slotted them into the Testing & Quality section.
-
 ```markdown
 # 🌬️ Wind Resource Assessment – *final-project-brunchyy*
 
