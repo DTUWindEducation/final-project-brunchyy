@@ -120,7 +120,7 @@ This package follows a clean, modular design. Key components include:
   Classes for generic and data-driven turbines plus AEP calculation.
 
 ### Architecture Diagram
-Note: This is just an example of the diagram workflow for the wind turbine power curve plots.
+Note: This is the diagram workflow for the wind turbine power curve plots.
 ![figure](diagram.jpeg)
 
 ---
