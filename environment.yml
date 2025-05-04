@@ -1,0 +1,17 @@
+name: testpack
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  - pylint
+  - pytest
+  - pytest-cov
+  - pip:
+      - numpy
+      - pandas
+      - matplotlib
+      - scipy
+      - xarray
+      - netCDF4
+      - windrose
