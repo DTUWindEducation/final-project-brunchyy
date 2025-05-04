@@ -87,7 +87,6 @@ print(f"AEP for {chosen_turbine.name} at {height} m = {aep/1e6:.2f} MWh/year")
 
 
 # Save in the outputs folder the results
-
 # Save the interpolated data and height-adjusted speeds
 interpolated_table.to_csv("outputs/interpolated_data.csv", index=False)
 height_speed.to_csv(f"outputs/wind_data_{height}m.csv", index=False)
