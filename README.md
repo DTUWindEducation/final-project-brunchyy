@@ -1,200 +1,171 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/zjSXGKeR)
-
-# Wind Resource Assessment Package – `wra_brunchyy`
 
 
-**Team:** Alicia Masero, Sofia Mares, August […]  
+# 🌬️ Wind Resource Assessment – *final-project-brunchyy*
 
----
+This Python package performs a full **wind resource assessment** using reanalysis data, power curves from reference wind turbines, and spatial interpolation to estimate energy yield at a given site. The package processes NetCDF data, interpolates wind values at a target location, computes Weibull distributions, and estimates Annual Energy Production (AEP) using reference turbine curves.
 
-## Table of Contents, TO CHANGE
-
-1. [Overview](#overview)  
-2. [Features](#features)  
-3. [Quick-start Guide](#quick-start-guide)  
-4. [Architecture & Modules](#architecture--modules)  
-5. [Installation](#installation)  
-6. [Usage Examples](#usage-examples)  
-7. [Testing](#testing)  
-8. [Peer Review Notes](#peer-review-notes)  
-9. [License](#license)  
+It is designed to help users assess the viability of wind energy projects and visualize key metrics such as wind roses and power curves.
 
 ---
 
-## Overview
-
-This Python package automates a full wind-resource assessment (WRA) workflow using ERA5 reanalysis data. It supports:
-
-- Loading & parsing multi-year NetCDF4 files (ERA5 u/v at 10 m & 100 m).  
-- Computing wind speed & direction at measurement heights.  
-- Bilinear interpolation to an arbitrary site within the grid.  
-- Vertical extrapolation to turbine hub height via the power-law profile.  
-- Statistical analysis: Weibull distribution fitting & histogram overlay.  
-- Wind-rose visualization of directional frequency and speed classes.  
-- AEP estimation using generic or data-driven turbine power curves.  
-
-This project fulfills the final requirements of the DTU course [**46120 Scientific Programming for Wind Energy**].
-
----
-
-## Features
-
-- **Data ingestion:** `nc_reader`  
-- **Wind metrics:** `wind_speed`, `wind_direction`  
-- **Spatial interpolation:** `nc_sorter`, `interpolation`  
-- **Vertical extrapolation:** `compute_power_law`  
-- **Weibull analysis:** `fit_weibull`, `plot_weibull`  
-- **Wind rose:** `wind_rose`  
-- **Turbine modeling:** `GeneralWindTurbine`, `WindTurbine`, `TurbineParameters`  
-- **AEP calculation** (coming in Q8)  
-
----
-
-
-## Architecture & Modules
+##  File Structure
 
 ```
-wind_resource_assessment/
-├── inputs/                 # ERA5 NetCDF4 files
-├── src/
-│   ├── __init__.py         # core functions
-│   ├── analysis.py         # end-to-end driver script
-│   ├── stats.py            # Weibull fitting & plotting
-│   ├── wind_rose.py        # wind-rose visualization
-│   ├── data_loader.py      # nc_reader, wind_speed, nc_sorter
-│   └── shear.py            # compute_power_law
-├── turbine_data/           # CSV power-curve files
-├── tests/                  # pytest suites
-├── requirements.txt
-└── README.md
+WIND RESOURCE ASSESSMENT/
+├── inputs/                      # All input data (NetCDF, turbine CSVs, diagrams)
+│   ├── 1997-1999.nc
+│   ├── 2000-2002.nc
+│   ├── 2003-2005.nc
+│   ├── 2006-2008.nc
+│   ├── NREL_Reference_15MW_240.csv
+│   ├── NREL_Reference_5MW_126.csv
+│   └── Wind_resource_assessment_procedure.jpeg
+├── outputs/                     # To be populated by results
+├── src/                         # Source functions and classes
+│   └── __init__.py
+│   └── <wra_brunchyy>/             # Main package directory (your namespace)
+├── examples/                    # Run-ready scripts
+│   └── main.py
+├── tests/                       # Unit tests
+│   ├── test_core.py
+│   └── test_turbine.py
+├── Diagram.drawio              # Architecture diagram
+├── .gitignore
+├── LICENSE
+├── README.md
+├── pyproject.toml
+└── environment.yml
 ```
-
-- **`data_loader.py`**: Q1–Q3  
-- **`shear.py`**: Q4  
-- **`stats.py`**: Q5–Q6  
-- **`wind_rose.py`**: Q7  
-- **`analysis.py`**: orchestrates Q1–Q7 and prepares for Q8  
 
 ---
 
-## Installation Guide
+## 1 - Overview of the Package
 
-Follow the steps below to install and run the project in a fresh Python environment using **Conda** and editable install via `pip`.
+This package offers a **modular and reusable workflow** for evaluating the wind energy potential at any given location based on gridded meteorological data and turbine characteristics. Core functionalities include:
 
-### 1. Clone the Repository
+* Parsing and organizing NetCDF files
+* Sorting and interpolating wind data
+* Applying turbine power curves
+* Estimating Weibull parameters
+* Visualizing results (histograms, wind roses, power curves)
+* Computing AEP
 
-Open **Anaconda Prompt**, then navigate to the folder where you want to place the project:
+---
 
-cd path\to\your\workspace # example
+## 2 - Installation Instructions
+
+### Step 1: Clone the Repository
 
 ```bash
 git clone https://github.com/DTUWindEducation/final-project-brunchyy.git
 cd final-project-brunchyy
+```
 
-
-### 2. Create and Activate the Conda Environment
-Create the environment (named wra_brunchyy) using the provided environment.yml file:
+### Step 2: Create and Activate the Conda Environment
 
 ```bash
 conda env create -f environment.yml
 conda activate wra_brunchyy
+```
 
-### 3.  Install the Package in Editable Mode
-Use pip install -e . to install the package from source in editable mode. This allows you to modify the code and see changes without reinstalling:
+### Step 3: Install the Package (Editable Mode)
 
 ```bash
 pip install -e .
+```
 
-
-### 4. Run the Script
-Once everything is set up, run the main script to execute the wind resource assessment workflow:
+### Step 4: Run the Main Script
 
 ```bash
-python examples/Main.py
-
-This will generate:
-
-Wind turbine power curve plots
-
-Interpolated wind speed & direction data
-
-Weibull distribution fit and histogram
-
-Wind rose diagram
-
-Annual Energy Production (AEP) estimate
-
-### 5. Run tests
-
-```bash
-pytest tests/
-
-
----
-
-
-
-## Usage Examples
-
-### 1. Load & preprocess data  
-```python
-from data_loader import nc_reader, wind_speed, nc_sorter, interpolation
-
-df2 = nc_reader("inputs/1997-1999.nc")
-df  = wind_speed(df2)
-c1, c2, c3, c4 = nc_sorter(df)
-site_df = interpolation(55.527, 7.906, c1,c2,c3,c4)
+python examples/main.py
 ```
 
-### 2. Shear to hub height  
-```python
-from shear import compute_power_law
-hub_df = compute_power_law(site_df, z1=10, z2=100, height=90)
-```
+This will output:
 
-### 3. Weibull analysis  
-```python
-from stats import fit_weibull, plot_weibull
-speed_array = hub_df["wind_speed_90m"].to_numpy()
-k, A = fit_weibull(speed_array)
-plot_weibull(speed_array, k, A)
-```
+* Wind turbine power curve plots
+* Interpolated wind data
+* Weibull fit and histogram
+* Wind rose diagram
+* AEP estimate
 
-### 4. Wind rose  
-```python
-from wind_rose import plot_wind_rose
-dirs  = hub_df["wind_direction_90m"].to_numpy()
-speeds= hub_df["wind_speed_90m"].to_numpy()
-plot_wind_rose(dirs, speeds, dir_bins=16, speed_bins=[0,4,8,12,16])
-```
-
----
-
-## Testing
-
-We use **pytest**. To run all tests:
+### Step 5: Run Tests
 
 ```bash
 pytest tests/
 ```
 
-Coverage reports ensure each function is exercised.
+---
+
+## 3 - Architecture and Class Description
+
+This package follows a clean, modular design. Key components include:
+
+* **Data Loading & Sorting**
+  Functions that load NetCDF data and organize it by grid cells.
+
+* **Interpolation**
+  Interpolates wind data (speed and direction) to a target location based on surrounding grid cells.
+
+* **WindTurbine Class**
+  Encapsulates turbine parameters and interpolates power output using the given power curve.
+
+* **Plotting Functions**
+  Used to create wind roses, histograms, and power curve plots.
+
+### Architecture Diagram
+
+A visual representation of function interactions and data flow:
+
+![figure](diagram.jpeg)
 
 ---
 
-## Peer Review Notes
+## 4 - Description of Classes
 
-- **Interpolation**: check lat/lon fraction ordering.  
-- **Shear**: validated against analytical power-law.  
-- **Weibull fit**: cross-checked with SciPy reference.  
-- **Wind rose**: verified directional bin counts.  
-- **Turbine models**: edge cases (cut-in/out) tested.  
+**WindTurbine (in `src/__init__.py`)**
+A class that takes hub height, rotor diameter, rated power, and power curve data. Core method:
 
-Please leave comments on module clarity, edge-case handling, and documentation completeness.
+* `get_power(wind_speeds)` → returns estimated power output.
+
+**Interpolation Function**
+Interpolates wind speed and direction using bilinear interpolation from surrounding grid data.
+
+**Utility Functions**
+Load turbine CSVs, calculate Weibull distributions, visualize wind data.
 
 ---
 
-## License
+## 5 - Git Workflow & Collaboration Description
 
-This project is released under the MIT License.  
-```
+Our team followed a **branch-based Git workflow**, collaborating via GitHub:
+
+* Each member created their own feature/test branches.
+* We used pull requests (PRs) to propose changes, ensuring that every PR included:
+
+  * A brief description
+  * Associated tests
+  * Code reviews before merging to `main`
+
+Tests were written using `pytest`, and code was organized in a testable, modular structure from the beginning. We used `environment.yml` to keep dependencies unified.
+
+---
+
+
+## Collaboration Workflow
+
+We **equally divided the work** and collaborated on each core task using dedicated **feature branches**. Each member was responsible for implementing and reviewing different parts of the workflow, but all decisions were made collectively.
+
+* For each task, we **created a separate branch** (e.g., `feature/interpolation`, `test/weibull`, etc.).
+* Once a task was complete, we **opened a pull request** and **requested feedback** from all team members.
+* **Nothing was pushed to `main`** without **consensus and approval** from the full team.
+* We followed a **test-driven** approach, writing tests for each function to ensure correctness before merging.
+* Code was reviewed collaboratively, and **every contribution required passing tests and lint checks**.
+
+This approach helped ensure high code quality and a shared understanding of the full project.
+
+---
+
+##  License
+
+This project is licensed under the MIT License – see the `LICENSE` file for details.
+
