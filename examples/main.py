@@ -18,7 +18,7 @@ MW15 = "inputs/NREL_Reference_15MW_240.csv"
 filePath = np.array([MW5, MW15])
 
 # Parameters are taken from:
-# https://nrel.github.io/turbine-models/LEANWIND_8MW_164_RWT.html
+# NREL 5 MW reference turbine:
 rotor_diameter = 126   # meters
 hub_height = 90        # meters
 rated_power = 5000     # kW
