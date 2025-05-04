@@ -23,7 +23,7 @@ WIND RESOURCE ASSESSMENT/
 ├── outputs/                     # To be populated by results
 ├── src/                         # Source functions and classes
 │   └── __init__.py
-│   └── <wra_brunchyy>/             # Main package directory (your namespace)
+│   └── <wra_brunchyy>/          # Main package directory 
 ├── examples/                    # Run-ready scripts
 │   └── main.py
 ├── tests/                       # Unit tests
@@ -41,7 +41,7 @@ WIND RESOURCE ASSESSMENT/
 
 ## 1 - Overview of the Package
 
-This package offers a **modular and reusable workflow** for evaluating the wind energy potential at any given location based on gridded meteorological data and turbine characteristics. Core functionalities include:
+This package offers a **modular and reusable workflow** for evaluating the wind energy potential at any given location based on meteorological data and turbine characteristics. Core functionalities include:
 
 * Parsing and organizing NetCDF files
 * Sorting and interpolating wind data
@@ -53,6 +53,8 @@ This package offers a **modular and reusable workflow** for evaluating the wind 
 ---
 
 ## 2 - Installation Instructions
+
+Open Anaconda Prompt, then navigate to the folder where you want to place the project, and follow the next steps.
 
 ### Step 1: Clone the Repository
 
