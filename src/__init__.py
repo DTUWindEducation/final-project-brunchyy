@@ -284,12 +284,12 @@ class TurbineParameters:
         if self.name:
             print(f"Turbine Name: {self.name}")
 
-    def csv_reader(self, filePath):
+    def csv_reader(self, file_path):
         """
         Reads the CSV files and returns a list of DataFrames.
         """
         mw = []
-        for path in filePath:
+        for path in file_path:
             df = pd.read_csv(path)
             mw.append(df)
         return mw
