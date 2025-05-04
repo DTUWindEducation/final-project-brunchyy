@@ -2,7 +2,7 @@
 
 # Wind Resource Assessment Package
 
-**Team:** Alicia Masero, Sofia Mares, August …  
+**Team:** Alicia Masero, Sofia Mares, August […]  
 
 ---
 
