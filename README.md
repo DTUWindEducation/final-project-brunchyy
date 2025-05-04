@@ -24,8 +24,8 @@ WIND RESOURCE ASSESSMENT/
 │   └── Wind\_resource\_assessment\_procedure.jpeg
 ├── outputs/                     # To be populated by results
 ├── src/                         # Source functions and classes
-│   └── **init**.py
-│   └── \<wra\_brunchyy>/          # Main package directory
+│   └── __init__.py
+│   └── \<wra\_brunchyy>/        # Main package directory
 ├── examples/                    # Run-ready scripts
 │   └── main.py
 ├── tests/                       # Unit tests
