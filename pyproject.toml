@@ -33,6 +33,9 @@ dependencies = [
 [project.urls]
 Repository = "https://github.com/DTUWindEducation/final-project-brunchyy"
 
-# Explicitly set source directory (default is "src/")
+[tool.hatch.build.targets.wheel]
+include = ["src/__init__.py"]
+
 [tool.hatch.build]
-sources = ["."]  # Look in root for packages
+sources = ["src"]
+
