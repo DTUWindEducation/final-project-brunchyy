@@ -61,7 +61,8 @@ This package offers a **modular and reusable workflow** for evaluating the wind 
 Open Anaconda Prompt, then navigate to the folder where you want to place the project, and follow the next steps.
 
 Note: "The key to success is patience"
-Please be patient during the installation process — creating the Conda environment and installing dependencies might take up to 5 minutes.
+
+Please be patient during the installation process — creating the Conda environment and installing dependencies might take up to few minutes.
 
 ### Step 1: Clone the Repository
 
