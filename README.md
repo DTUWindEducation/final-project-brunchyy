@@ -35,6 +35,7 @@ WIND RESOURCE ASSESSMENT/
 ├── .gitignore
 ├── LICENSE
 ├── README.md
+├── diagram.jpeg
 ├── pyproject.toml
 └── environment.yml
 
