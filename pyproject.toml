@@ -1,4 +1,3 @@
-# An extremely complicated pyproject.toml
 # Many more options here: https://packaging.python.org/en/latest/guides/writing-pyproject-toml/
 
 # How to build your package. "[S]trongly recommended" to include this,
@@ -34,5 +33,6 @@ dependencies = [
 [project.urls]
 Repository = "https://github.com/DTUWindEducation/final-project-brunchyy"
 
-[tool.hatch.build.targets.wheel]
-packages = ["src"]
+# Explicitly set source directory (default is "src/")
+[tool.hatch.build]
+sources = ["."]  # Look in root for packages
