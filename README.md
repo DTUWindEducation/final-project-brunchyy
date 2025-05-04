@@ -1,12 +1,13 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/zjSXGKeR)
 
-# Wind Resource Assessment Package
+# Wind Resource Assessment Package – `wra_brunchyy`
+
 
 **Team:** Alicia Masero, Sofia Mares, August […]  
 
 ---
 
-## Table of Contents
+## Table of Contents, TO CHANGE
 
 1. [Overview](#overview)  
 2. [Features](#features)  
@@ -32,7 +33,7 @@ This Python package automates a full wind-resource assessment (WRA) workflow usi
 - Wind-rose visualization of directional frequency and speed classes.  
 - AEP estimation using generic or data-driven turbine power curves.  
 
-This package implements Questions 1–8 of the DTU “Scientific Programming for Wind Energy” final project.
+This project fulfills the final requirements of the DTU course [**46120 Scientific Programming for Wind Energy**].
 
 ---
 
@@ -49,33 +50,6 @@ This package implements Questions 1–8 of the DTU “Scientific Programming for
 
 ---
 
-## Quick-start Guide
-
-1. **Clone the repo**  
-   ```bash
-   git clone https://github.com/your-org/your-repo.git
-   cd your-repo
-
-2. **Install dependencies**  
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Run the analysis script**  
-   ```bash
-   python src/analysis.py
-   ```
-   This will produce:
-   - Time-series plots of wind speed  
-   - Weibull‐fit histogram  
-   - Wind-rose polar plots  
-
-4. **Run tests**  
-   ```bash
-   pytest tests/
-   ```
-
----
 
 ## Architecture & Modules
 
@@ -103,17 +77,62 @@ wind_resource_assessment/
 
 ---
 
-## Installation
+## Installation Guide
+
+Follow the steps below to install and run the project in a fresh Python environment using **Conda** and editable install via `pip`.
+
+### 1. Clone the Repository
+
+Open **Anaconda Prompt**, then navigate to the folder where you want to place the project:
+
+cd path\to\your\workspace # example
 
 ```bash
-# create & activate virtual env (optional)
-python -m venv venv && source venv/bin/activate
+git clone https://github.com/DTUWindEducation/final-project-brunchyy.git
+cd final-project-brunchyy
 
-# install requirements
-pip install -r requirements.txt
-```
+
+### 2. Create and Activate the Conda Environment
+Create the environment (named wra_brunchyy) using the provided environment.yml file:
+
+```bash
+conda env create -f environment.yml
+conda activate wra_brunchyy
+
+### 3.  Install the Package in Editable Mode
+Use pip install -e . to install the package from source in editable mode. This allows you to modify the code and see changes without reinstalling:
+
+```bash
+pip install -e .
+
+
+### 4. Run the Script
+Once everything is set up, run the main script to execute the wind resource assessment workflow:
+
+```bash
+python examples/Main.py
+
+This will generate:
+
+Wind turbine power curve plots
+
+Interpolated wind speed & direction data
+
+Weibull distribution fit and histogram
+
+Wind rose diagram
+
+Annual Energy Production (AEP) estimate
+
+### 5. Run tests
+
+```bash
+pytest tests/
+
 
 ---
+
+
 
 ## Usage Examples
 
