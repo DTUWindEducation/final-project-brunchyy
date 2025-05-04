@@ -33,7 +33,7 @@ turbineParams.showcase()
 
 
 
-MW = turbineParams.csvReader(filePath)
+MW = turbineParams.csv_reader(filePath)
 power_curve = turbineParams.power_curve(MW)
 
 
@@ -49,17 +49,17 @@ file_path = ["inputs/1997-1999.nc", "inputs/2000-2002.nc", "inputs/2003-2005.nc"
 
 df2 = init.nc_reader(file_path)
 
-df = init.wind_speed(df2)
+df = init.wind_speed_df(df2)
 
-lat_8_lon_55_5, lat_8_lon_55_75, lat_7_75_lon_55_5, lat_7_75_lon_55_75 = init.nc_sorter(df)
+tables = init.nc_sorter(df)
 
 
 
-interpolatedTable = init.interpolation(7.93, 55.65, lat_8_lon_55_5, lat_8_lon_55_75, lat_7_75_lon_55_5, lat_7_75_lon_55_75)
-print(interpolatedTable)
+interpolated_table = init.interpolation(7.93, 55.65, tables)
+print(interpolated_table)
 
 height = 90
-height_speed = init.compute_power_law(interpolatedTable, height) 
+height_speed = init.compute_power_law(interpolated_table, height) 
 print(height_speed)
 #######snippet code to make stats work
 
