@@ -85,51 +85,31 @@ def interpolation(lat, lon, tables):
 
     inter = {}
 
-    inter["latTop10Speed"] = lat_7_75_lon_55_5["wind_speed_10m [m/s]"]
-    + (lat_8_lon_55_5["wind_speed_10m [m/s]"]
-    - lat_7_75_lon_55_5["wind_speed_10m [m/s]"]) * xpercent
-    inter["latBottom10Speed"] = lat_7_75_lon_55_75["wind_speed_10m [m/s]"]
-    + (lat_8_lon_55_75["wind_speed_10m [m/s]"]
-    - lat_7_75_lon_55_75["wind_speed_10m [m/s]"]) * xpercent
+    inter["latTop10Speed"] = lat_7_75_lon_55_5["wind_speed_10m [m/s]"] + (lat_8_lon_55_5["wind_speed_10m [m/s]"] - lat_7_75_lon_55_5["wind_speed_10m [m/s]"]) * xpercent
+    inter["latBottom10Speed"] = lat_7_75_lon_55_75["wind_speed_10m [m/s]"] + (lat_8_lon_55_75["wind_speed_10m [m/s]"] - lat_7_75_lon_55_75["wind_speed_10m [m/s]"]) * xpercent
 
-    inter["interValue10Speed"] =  inter["latBottom10Speed"]
-    + (inter["latTop10Speed"] - inter["latBottom10Speed"]) * ypercent
+    inter["interValue10Speed"] =  inter["latBottom10Speed"] + (inter["latTop10Speed"] - inter["latBottom10Speed"]) * ypercent
 
 
 
-    inter["latTop100Speed"] = lat_7_75_lon_55_5["wind_speed_100m [m/s]"]
-    + (lat_8_lon_55_5["wind_speed_100m [m/s]"]
-    - lat_7_75_lon_55_5["wind_speed_100m [m/s]"]) * xpercent
-    inter["latBottom100Speed"] = lat_7_75_lon_55_75["wind_speed_100m [m/s]"]
-    + (lat_8_lon_55_75["wind_speed_100m [m/s]"]
-    - lat_7_75_lon_55_75["wind_speed_100m [m/s]"]) * xpercent
+    inter["latTop100Speed"] = lat_7_75_lon_55_5["wind_speed_100m [m/s]"] + (lat_8_lon_55_5["wind_speed_100m [m/s]"] - lat_7_75_lon_55_5["wind_speed_100m [m/s]"]) * xpercent
+    inter["latBottom100Speed"] = lat_7_75_lon_55_75["wind_speed_100m [m/s]"] + (lat_8_lon_55_75["wind_speed_100m [m/s]"] - lat_7_75_lon_55_75["wind_speed_100m [m/s]"]) * xpercent
 
-    inter["interValue100Speed"] =  inter["latBottom100Speed"]
-    + (inter["latTop100Speed"] - inter["latBottom100Speed"]) * ypercent
+    inter["interValue100Speed"] =  inter["latBottom100Speed"] + (inter["latTop100Speed"] - inter["latBottom100Speed"]) * ypercent
 
 
 
-    inter["latTop10Direction"] = lat_7_75_lon_55_75["wind_direction_10m [degrees]"]
-    + (lat_8_lon_55_75["wind_direction_10m [degrees]"]
-    - lat_7_75_lon_55_75["wind_direction_10m [degrees]"]) * xpercent
-    inter["latBottom10Direction"] = lat_7_75_lon_55_5["wind_direction_10m [degrees]"]
-    + (lat_8_lon_55_5["wind_direction_10m [degrees]"]
-    - lat_7_75_lon_55_5["wind_direction_10m [degrees]"]) * xpercent
+    inter["latTop10Direction"] = lat_7_75_lon_55_75["wind_direction_10m [degrees]"] + (lat_8_lon_55_75["wind_direction_10m [degrees]"] - lat_7_75_lon_55_75["wind_direction_10m [degrees]"]) * xpercent
+    inter["latBottom10Direction"] = lat_7_75_lon_55_5["wind_direction_10m [degrees]"] + (lat_8_lon_55_5["wind_direction_10m [degrees]"] - lat_7_75_lon_55_5["wind_direction_10m [degrees]"]) * xpercent
 
-    inter["interValue10Direction"] =  inter["latBottom10Direction"]
-    + (inter["latTop10Direction"] - inter["latBottom10Direction"]) * ypercent
+    inter["interValue10Direction"] =  inter["latBottom10Direction"] + (inter["latTop10Direction"] - inter["latBottom10Direction"]) * ypercent
 
 
 
-    inter["latTop100Direction"] = lat_7_75_lon_55_75["wind_direction_100m [degrees]"]
-    + (lat_8_lon_55_75["wind_direction_100m [degrees]"]
-    - lat_7_75_lon_55_75["wind_direction_100m [degrees]"]) * xpercent
-    inter["latBottom100Direction"] = lat_7_75_lon_55_5["wind_direction_100m [degrees]"]
-    + (lat_8_lon_55_5["wind_direction_100m [degrees]"]
-    - lat_7_75_lon_55_5["wind_direction_100m [degrees]"]) * xpercent
+    inter["latTop100Direction"] = lat_7_75_lon_55_75["wind_direction_100m [degrees]"] + (lat_8_lon_55_75["wind_direction_100m [degrees]"] - lat_7_75_lon_55_75["wind_direction_100m [degrees]"]) * xpercent
+    inter["latBottom100Direction"] = lat_7_75_lon_55_5["wind_direction_100m [degrees]"] + (lat_8_lon_55_5["wind_direction_100m [degrees]"] - lat_7_75_lon_55_5["wind_direction_100m [degrees]"]) * xpercent
 
-    inter["interValue100Direction"] =  inter["latBottom100Direction"]
-    + (inter["latTop100Direction"] - inter["latBottom100Direction"]) * ypercent
+    inter["interValue100Direction"] =  inter["latBottom100Direction"] + (inter["latTop100Direction"] - inter["latBottom100Direction"]) * ypercent
 
 
 
@@ -167,9 +147,7 @@ def compute_power_law(interpolated_table, height, z1=10, z2=100):
     # Computing the interpolated direction
     y_percent = (height - z1) / (z2 - z1)
     if height <= 100:
-        direction_z = interpolated_table["wind_direction_10m [degrees]"]
-        + (interpolated_table["wind_direction_100m [degrees]"]
-           - interpolated_table["wind_direction_10m [degrees]"]) * y_percent
+        direction_z = interpolated_table["wind_direction_10m [degrees]"] + (interpolated_table["wind_direction_100m [degrees]"] - interpolated_table["wind_direction_10m [degrees]"]) * y_percent
     else:
         direction_z = interpolated_table["wind_direction_100m [degrees]"]
 
